@@ -1,0 +1,7 @@
+[project]
+name = "waves-activity"
+version = "1.1.0"
+description = "Reuse XutheringWavesUID bindings and proxy for the fishing activity"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["aiohttp>=3.9"]
