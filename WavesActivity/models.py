@@ -1,4 +1,4 @@
-"""Response models, verified level plans and reward summaries."""
+"""Shared API response types and archived fishing models, plans and reward summaries."""
 
 from dataclasses import dataclass, field
 

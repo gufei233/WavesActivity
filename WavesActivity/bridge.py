@@ -14,6 +14,7 @@ from plugins.XutheringWavesUID.XutheringWavesUID.wutheringwaves_config import Wu
 class Account:
     uid: str
     token: str = field(repr=False)
+    did: str = field(default="", repr=False)
 
 
 @dataclass(frozen=True)
@@ -49,7 +50,7 @@ class AccountReader:
         ).first()
         if row is None or not row.cookie:
             return None
-        return Account(uid=uid, token=row.cookie)
+        return Account(uid=uid, token=row.cookie, did=row.did)
 
 
 async def get_account(user_id: str, bot_id: str) -> Account | None:

@@ -1,4 +1,4 @@
-"""Exchange credentials and execute the fishing activity in server order."""
+"""Archived fishing activity, expired on 2026-11-01; no longer used by command handlers."""
 
 import asyncio
 import secrets
