@@ -92,9 +92,8 @@ class WishlistActivity:
         }
         if self.token:
             headers["Authorization"] = self.token
-        async with self.session.request(
-            method, BASE + path, headers=headers, json=body, proxy=self.network.proxy
-        ) as response:
+        # XWUID's community proxy may reject CONNECT to activity domains.
+        async with self.session.request(method, BASE + path, headers=headers, json=body) as response:
             if response.status != 200:
                 raise ActivityError(f"预约 {path} 返回 HTTP {response.status}，本次已停止。")
             envelope = Envelope.model_validate(await response.json(content_type=None))

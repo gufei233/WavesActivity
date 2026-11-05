@@ -21,7 +21,7 @@ GsCore 鸣潮网页活动插件，依赖 [XutheringWavesUID](https://github.com/
 2. 发送管理员指令 `core重载插件WavesActivity`，或重启 GsCore。
 3. 使用 `ww预约`。更新后或修改 XWUID 前缀后需重新加载插件。
 
-代理沿用 XWUID 的 `KuroUrlProxyUrl`、`LocalProxyUrl`；`NeedProxyFunc` 包含 `all` 或 `run_activity` 时使用网络代理。
+库街区查询和授权沿用 XWUID 的 `KuroUrlProxyUrl`、`LocalProxyUrl`；`NeedProxyFunc` 包含 `all` 或 `run_activity` 时启用代理。预约站点直接连接，避免库街区专用代理拒绝该域名。
 
 ## 已结束的钓鱼活动
 

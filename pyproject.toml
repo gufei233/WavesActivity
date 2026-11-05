@@ -1,6 +1,6 @@
 [project]
 name = "waves-activity"
-version = "1.2.0"
+version = "1.2.1"
 description = "Claim wishlist rewards using XutheringWavesUID accounts and proxy settings"
 readme = "README.md"
 requires-python = ">=3.11"

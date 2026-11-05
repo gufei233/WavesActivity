@@ -26,7 +26,7 @@ _deliveries: set[asyncio.Task[None]] = set()
 async def execute_activity(account: Account, start: asyncio.Event) -> str:
     await start.wait()
     network = get_network()
-    logger.info(f"[鸣潮预约] 开始执行，网络代理={'开启' if network.proxy else '关闭'}")
+    logger.info(f"[鸣潮预约] 开始执行，库街区代理={'开启' if network.proxy else '关闭'}，预约接口=直连")
     async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=30)) as session:
         result = await WishlistActivity(session, network).run(account)
     logger.info(f"[鸣潮预约] 执行完成，新增愿望单={result.newly_joined}")
@@ -37,9 +37,12 @@ def failure_message(error: BaseException) -> str:
     if isinstance(error, ActivityError):
         logger.warning(f"[鸣潮活动] {error}")
         message = str(error)
+    elif isinstance(error, aiohttp.ClientHttpProxyError):
+        logger.warning(f"[鸣潮预约] 库街区代理拒绝连接：HTTP {error.status}")
+        message = f"库街区代理拒绝连接（HTTP {error.status}），请检查 XWUID 代理配置。"
     elif isinstance(error, (aiohttp.ClientError, TimeoutError)):
         logger.warning(f"[鸣潮活动] 网络请求失败：{type(error).__name__}")
-        message = "网络请求失败，请检查 XWUID 代理配置后重试。"
+        message = "网络请求失败，请稍后重试或联系管理员检查网络。"
     elif isinstance(error, ValidationError):
         fields = "、".join(
             f"{'.'.join(str(part) for part in item['loc'])}:{item['type']}"
