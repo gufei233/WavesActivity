@@ -4,7 +4,7 @@ from gsuid_core.logger import logger
 from gsuid_core.server import on_core_shutdown, on_core_start, on_core_start_before
 from gsuid_core.sv import SL, SV, Plugins
 
-from .runner import activity_handler, stop_activity_tasks, wishlist_handler
+from .runner import activity_handler, reservation_handler, stop_activity_tasks
 
 Plugins(name="WavesActivity", allow_empty_prefix=False)
 sv = SV("鸣潮活动", priority=3)
@@ -31,11 +31,11 @@ async def register_commands() -> None:
         raise RuntimeError("XWUID 未配置可用指令前缀，无法注册活动指令。")
     sv.TL.clear()
     commands = tuple(prefix + "活动" for prefix in prefixes)
-    wishlist_commands = tuple(prefix + "预约" for prefix in prefixes)
+    reservation_commands = tuple(prefix + "预约" for prefix in prefixes)
     sv.on_fullmatch(commands, block=True, prefix=False)(activity_handler)
-    sv.on_fullmatch(wishlist_commands, block=True, prefix=False)(wishlist_handler)
+    sv.on_fullmatch(reservation_commands, block=True, prefix=False)(reservation_handler)
     _registered = True
-    logger.info(f"[鸣潮活动] 已注册指令：{', '.join(commands + wishlist_commands)}")
+    logger.info(f"[鸣潮活动] 已注册指令：{', '.join(commands + reservation_commands)}")
 
 
 @on_core_shutdown

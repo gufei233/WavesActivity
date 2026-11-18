@@ -15,8 +15,8 @@ from gsuid_core.models import Event
 from gsuid_core.sv import get_plugin_available_prefix
 
 from .bridge import Account, get_account, get_network
+from .federation import FederationActivity
 from .models import ActivityError
-from .wishlist import WishlistActivity
 
 TASK_PREFIX = "WavesActivity:"
 _tasks: dict[str, asyncio.Task[str]] = {}
@@ -28,8 +28,8 @@ async def execute_activity(account: Account, start: asyncio.Event) -> str:
     network = get_network()
     logger.info(f"[鸣潮预约] 开始执行，库街区代理={'开启' if network.proxy else '关闭'}，预约接口=直连")
     async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=30)) as session:
-        result = await WishlistActivity(session, network).run(account)
-    logger.info(f"[鸣潮预约] 执行完成，新增愿望单={result.newly_joined}")
+        result = await FederationActivity(session, network).run(account)
+    logger.info(f"[鸣潮预约] 执行完成，新增预约={result.newly_reserved}，新增分享任务={result.newly_shared}")
     return result.render(account.uid)
 
 
@@ -58,7 +58,7 @@ def failure_message(error: BaseException) -> str:
         detail = "".join(traceback.format_tb(error.__traceback__))
         logger.error(f"[鸣潮活动] 后台执行异常：{type(error).__name__}\n{detail}")
         message = "后台执行异常，请联系管理员查看日志。"
-    return f"[鸣潮预约] {message}\n可稍后重新发送预约指令查询；已在愿望单中的角色会跳过领取。"
+    return f"[鸣潮预约] {message}"
 
 
 async def deliver_result(bot: Bot, message: str) -> None:
@@ -91,11 +91,11 @@ async def activity_handler(bot: Bot, ev: Event) -> None:
     prefix = get_plugin_available_prefix("XutheringWavesUID")
     await bot.send(
         "[鸣潮活动] 钓鱼活动已于北京时间 2026-11-01 10:00 结束，功能已停用。\n"
-        f"领取本期愿望单奖励请发送【{prefix}预约】。"
+        f"预约《鸣潮：永明的烬焰》请发送【{prefix}预约】。"
     )
 
 
-async def wishlist_handler(bot: Bot, ev: Event) -> None:
+async def reservation_handler(bot: Bot, ev: Event) -> None:
     if ev.task_event is not None:
         await bot.send("[鸣潮预约] 请通过机器人聊天发送指令，HTTP 调用无法接收后台完成结果。")
         return
@@ -112,7 +112,7 @@ async def wishlist_handler(bot: Bot, ev: Event) -> None:
     _tasks[account.uid] = task
     task.add_done_callback(partial(activity_done, account.uid, Bot(bot.bot, copy(ev))))
     try:
-        await bot.send("[鸣潮预约] 正在为当前绑定账号查询并领取愿望单奖励，完成后会发送结果。")
+        await bot.send("[鸣潮预约] 正在处理当前绑定角色的《永明的烬焰》预约及分享任务，完成后会发送结果。")
         start.set()
     finally:
         if not start.is_set():

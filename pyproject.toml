@@ -1,7 +1,7 @@
 [project]
 name = "waves-activity"
-version = "1.2.1"
-description = "Claim wishlist rewards using XutheringWavesUID accounts and proxy settings"
+version = "1.3.0"
+description = "Register for the New Federation event using XutheringWavesUID accounts"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = ["aiohttp>=3.9"]

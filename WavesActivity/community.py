@@ -22,13 +22,13 @@ async def community_request(
     headers = {
         "token": account.token,
         "channelId": "1",
-        "version": "3.4.0",
+        "version": "3.5.0",
         "channel": "appstore",
         "source": "ios",
         "lang": "zh-Hans",
         "model": "iPhone18,1",
-        "osVersion": "27.0.1",
-        "User-Agent": "KuroGameBox/20260922172728 CFNetwork/3896.100.1.2.1 Darwin/27.0.0",
+        "osVersion": "27.3",
+        "User-Agent": "KuroGameBox/20261105141507 CFNetwork/3896.300.71.2.4 Darwin/27.3.0",
     }
     if account.did:
         headers["devCode"] = account.did
